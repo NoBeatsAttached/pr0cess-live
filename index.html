@@ -57,6 +57,14 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
 .crewtag{display:block;text-align:center;margin-top:20px}
 .crewtag a{color:var(--dimmer);font-size:11px;letter-spacing:.16em;text-decoration:none;text-transform:uppercase}
 .crewtag a:hover{color:var(--electric)}
+#crewform{display:flex;flex-direction:column;align-items:center;gap:8px}
+#crewpin{background:var(--panel);border:1px solid var(--line2);color:var(--text);font:inherit;
+  font-size:15px;padding:10px 14px;text-align:center;width:160px;letter-spacing:.3em}
+#crewpin:focus{outline:none;border-color:var(--electric);box-shadow:0 0 0 1px var(--electric)}
+.crewbtn{background:var(--electric);color:#000;border:none;font:inherit;font-weight:700;font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;padding:10px 22px;cursor:pointer}
+.crewbtn:hover{filter:brightness(1.12)}
+.crewerr{font-size:11px;color:var(--hot);min-height:14px;letter-spacing:.1em}
 .tile.soon{opacity:.55;pointer-events:none}
 .tile.soon .go{color:var(--dim)}
 
@@ -118,7 +126,14 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
 
   </div>
 
-  <div class="crewtag"><a href="#" id="crewlink">crew access</a></div>
+  <div class="crewtag">
+    <a href="#" id="crewlink">crew access</a>
+    <div id="crewform" style="display:none;margin-top:12px">
+      <input id="crewpin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN" />
+      <button id="crewgo" class="crewbtn">Enter</button>
+      <div id="crewerr" class="crewerr"></div>
+    </div>
+  </div>
 
   <div class="foot">
     <div class="fbrand">PR<span class="z">0</span>CESS_LIVE</div>
@@ -158,20 +173,33 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
       if(!r.error && (r.data==="owner"||r.data==="mod")) reveal();
     });
   }
+  var form = document.getElementById("crewform");
+  var field = document.getElementById("crewpin");
+  var errbox = document.getElementById("crewerr");
   crew.addEventListener("click",function(e){
     e.preventDefault();
-    var p = prompt("Crew PIN:");
+    crew.style.display="none";
+    form.style.display="flex";
+    field.focus();
+  });
+  function submit(){
+    var p = field.value.trim();
     if(!p) return;
-    sb.rpc("pq_role",{p_pin:p.trim()}).then(function(r){
+    errbox.textContent="";
+    sb.rpc("pq_role",{p_pin:p}).then(function(r){
       if(!r.error && (r.data==="owner"||r.data==="mod")){
-        localStorage.setItem("pq_pin",p.trim());
+        localStorage.setItem("pq_pin",p);
         localStorage.setItem("pq_role",r.data);
         reveal();
       } else {
-        alert("Wrong PIN.");
+        errbox.textContent="Wrong PIN";
+        field.value="";
+        field.focus();
       }
     });
-  });
+  }
+  document.getElementById("crewgo").addEventListener("click",submit);
+  field.addEventListener("keydown",function(e){ if(e.key==="Enter") submit(); });
 })();
 </script>
 </body>
