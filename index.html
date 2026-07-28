@@ -165,7 +165,11 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
   );
   var tile = document.getElementById("timertile");
   var crew = document.getElementById("crewlink");
-  function reveal(){ tile.style.display=""; crew.style.display="none"; }
+  function reveal(){
+    tile.style.display="";
+    crew.style.display="none";
+    var f=document.getElementById("crewform"); if(f) f.style.display="none";
+  }
   // if a PIN is already saved from another site, verify it's still valid then show
   var saved = localStorage.getItem("pq_pin");
   if(saved){
