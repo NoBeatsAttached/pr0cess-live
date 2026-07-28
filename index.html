@@ -53,6 +53,10 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
 .tile.battle{--tilecol:var(--hot)}
 .tile.queue{--tilecol:var(--electric)}
 .tile.fix{--tilecol:var(--gold)}
+.tile.timer{--tilecol:var(--electric)}
+.crewtag{display:block;text-align:center;margin-top:20px}
+.crewtag a{color:var(--dimmer);font-size:11px;letter-spacing:.16em;text-decoration:none;text-transform:uppercase}
+.crewtag a:hover{color:var(--electric)}
 .tile.soon{opacity:.55;pointer-events:none}
 .tile.soon .go{color:var(--dim)}
 
@@ -105,7 +109,16 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
       <span class="go">Send it &rarr;</span>
     </a>
 
+    <a class="tile timer crewonly" id="timertile" href="https://nobeatsattached.github.io/pr0cesstimer/" style="display:none">
+      <span class="tnum">✦</span>
+      <h2>STREAM TIMER</h2>
+      <div class="sub">Crew only — live countdown / count-up overlay control.</div>
+      <span class="go">Open &rarr;</span>
+    </a>
+
   </div>
+
+  <div class="crewtag"><a href="#" id="crewlink">crew access</a></div>
 
   <div class="foot">
     <div class="fbrand">PR<span class="z">0</span>CESS_LIVE</div>
@@ -126,5 +139,40 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
   </div>
 
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  var sb = window.supabase.createClient(
+    "https://tewcgwhumtmjvfxcvbxl.supabase.co",
+    "sb_publishable_1DZr_3nrtELGlEFIR3SIMA_F_ELXSdn"
+  );
+  var tile = document.getElementById("timertile");
+  var crew = document.getElementById("crewlink");
+  function reveal(){ tile.style.display=""; crew.style.display="none"; }
+  // if a PIN is already saved from another site, verify it's still valid then show
+  var saved = localStorage.getItem("pq_pin");
+  if(saved){
+    sb.rpc("pq_role",{p_pin:saved}).then(function(r){
+      if(!r.error && (r.data==="owner"||r.data==="mod")) reveal();
+    });
+  }
+  crew.addEventListener("click",function(e){
+    e.preventDefault();
+    var p = prompt("Crew PIN:");
+    if(!p) return;
+    sb.rpc("pq_role",{p_pin:p.trim()}).then(function(r){
+      if(!r.error && (r.data==="owner"||r.data==="mod")){
+        localStorage.setItem("pq_pin",p.trim());
+        localStorage.setItem("pq_role",r.data);
+        reveal();
+      } else {
+        alert("Wrong PIN.");
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
