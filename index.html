@@ -99,6 +99,25 @@ body:not(.overlay)::after{
 }
 ::selection{background:#3A93D6;color:#050506}
 </style>
+
+<style>
+/* ═══ PR0CESS_LIVE WORDMARK — canonical lockup ══════════════════
+   Code font · .2em tracking · white · blue zero · blue // divider.
+   Identical across hub, battle, queue, project fix and timer.
+   ═════════════════════════════════════════════════════════════ */
+.brand,.logo,.wordmark,.g-brand,.fbrand,.footmark{
+  font-family:'Code','JetBrains Mono',ui-monospace,monospace;
+  font-weight:400;
+  letter-spacing:.2em;
+  color:#fff;
+}
+.brand,.wordmark,.g-brand{font-size:16px}
+.brand .z,.logo .z,.wordmark .z,.g-brand .z,.fbrand .z{color:var(--electric,#3A93D6)}
+.wordmark span,.brand small,.g-brand small{
+  color:var(--dim);font-weight:400;letter-spacing:.2em;
+}
+.wordmark span .z{color:var(--electric,#3A93D6)}
+</style>
 </head>
 <body>
 <div class="wrap">
