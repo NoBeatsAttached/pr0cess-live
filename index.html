@@ -54,6 +54,8 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
 .tile.queue{--tilecol:var(--electric)}
 .tile.fix{--tilecol:var(--gold)}
 .tile.timer{--tilecol:var(--electric)}
+.tile.slam{--tilecol:var(--electric)}
+.tile.obs{--tilecol:var(--hot)}
 .crewtag{display:block;text-align:center;margin-top:20px}
 .crewtag a{color:var(--dimmer);font-size:11px;letter-spacing:.16em;text-decoration:none;text-transform:uppercase}
 .crewtag a:hover{color:var(--electric)}
@@ -157,6 +159,20 @@ body:not(.overlay)::after{
       <span class="go">Open &rarr;</span>
     </a>
 
+    <a class="tile slam crewonly" id="slamtile" href="https://nobeatsattached.github.io/pr0cess-slam/" style="display:none" target="_blank" rel="noopener">
+      <span class="tnum">✦</span>
+      <h2>SLAM DECK</h2>
+      <div class="sub">Crew only — fire memes onto the stream in real time.</div>
+      <span class="go">Open &rarr;</span>
+    </a>
+
+    <a class="tile obs owneronly" id="obstile" href="https://nobeatsattached.github.io/pr0cess-slam/obs.html" style="display:none" target="_blank" rel="noopener">
+      <span class="tnum">◆</span>
+      <h2>OBS CONTROL</h2>
+      <div class="sub">Owner only — move sources, switch scenes, drop things on his screen.</div>
+      <span class="go">Open &rarr;</span>
+    </a>
+
   </div>
 
   <div class="crewtag">
@@ -196,10 +212,14 @@ body:not(.overlay)::after{
     "https://tewcgwhumtmjvfxcvbxl.supabase.co",
     "sb_publishable_1DZr_3nrtELGlEFIR3SIMA_F_ELXSdn"
   );
-  var tile = document.getElementById("timertile");
   var crew = document.getElementById("crewlink");
-  function reveal(){
-    tile.style.display="";
+  function reveal(role){
+    var i, c=document.querySelectorAll(".crewonly");
+    for(i=0;i<c.length;i++) c[i].style.display="";
+    if(role==="owner"){
+      var o=document.querySelectorAll(".owneronly");
+      for(i=0;i<o.length;i++) o[i].style.display="";
+    }
     crew.style.display="none";
     var f=document.getElementById("crewform"); if(f) f.style.display="none";
   }
@@ -207,7 +227,7 @@ body:not(.overlay)::after{
   var saved = localStorage.getItem("pq_pin");
   if(saved){
     sb.rpc("pq_role",{p_pin:saved}).then(function(r){
-      if(!r.error && (r.data==="owner"||r.data==="mod")) reveal();
+      if(!r.error && (r.data==="owner"||r.data==="mod")) reveal(r.data);
     });
   }
   var form = document.getElementById("crewform");
@@ -227,7 +247,7 @@ body:not(.overlay)::after{
       if(!r.error && (r.data==="owner"||r.data==="mod")){
         localStorage.setItem("pq_pin",p);
         localStorage.setItem("pq_role",r.data);
-        reveal();
+        reveal(r.data);
       } else {
         errbox.textContent="Wrong PIN";
         field.value="";
