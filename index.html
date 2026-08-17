@@ -56,6 +56,8 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;
 .tile.timer{--tilecol:var(--electric)}
 .tile.slam{--tilecol:var(--electric)}
 .tile.obs{--tilecol:var(--hot)}
+.tile.ticker{--tilecol:var(--electric)}
+.tile.clips{--tilecol:var(--electric)}
 .crewtag{display:block;text-align:center;margin-top:20px}
 .crewtag a{color:var(--dimmer);font-size:11px;letter-spacing:.16em;text-decoration:none;text-transform:uppercase}
 .crewtag a:hover{color:var(--electric)}
@@ -170,6 +172,20 @@ body:not(.overlay)::after{
       <span class="tnum">◆</span>
       <h2>OBS CONTROL</h2>
       <div class="sub">Owner only — move sources, switch scenes, drop things on his screen.</div>
+      <span class="go">Open &rarr;</span>
+    </a>
+
+    <a class="tile ticker crewonly" id="tickertile" href="https://nobeatsattached.github.io/pr0cess-slam/ticker.html" style="display:none" target="_blank" rel="noopener">
+      <span class="tnum">≡</span>
+      <h2>TICKER</h2>
+      <div class="sub">Crew only — push messages to the scrolling bar on stream.</div>
+      <span class="go">Open &rarr;</span>
+    </a>
+
+    <a class="tile clips crewonly" id="clipstile" href="https://nobeatsattached.github.io/pr0cess-slam/clips.html" style="display:none" target="_blank" rel="noopener">
+      <span class="tnum">▶</span>
+      <h2>CLIP PLAYER</h2>
+      <div class="sub">Crew only — the reel that plays if the stream drops.</div>
       <span class="go">Open &rarr;</span>
     </a>
 
