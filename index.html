@@ -191,6 +191,12 @@ body:not(.overlay)::after{
 
   </div>
 
+  <div class="crewonly" id="obslinks" style="display:none;max-width:900px;margin:34px auto 0;
+    border:1px solid var(--line);padding:20px 22px">
+    <div style="font-size:11px;letter-spacing:.24em;color:var(--dimmer);margin-bottom:14px">OBS BROWSER SOURCE LINKS</div>
+    <div id="lnks"></div>
+  </div>
+
   <div class="crewtag">
     <a href="#" id="crewlink">crew access</a>
     <div id="crewform" style="display:none;margin-top:12px">
@@ -229,7 +235,52 @@ body:not(.overlay)::after{
     "sb_publishable_1DZr_3nrtELGlEFIR3SIMA_F_ELXSdn"
   );
   var crew = document.getElementById("crewlink");
+  function buildLinks(){
+    var base="https://nobeatsattached.github.io/pr0cess-slam/";
+    var rows=[["FOLLOW BAR","follow.html","440 \u00d7 200"],
+              ["TICKER","ticker.html#overlay","1920 \u00d7 1080"],
+              ["SLAM OVERLAY","index.html#overlay","1920 \u00d7 1080"],
+              ["CLIP PLAYER (BRB scene)","clips.html#overlay","1920 \u00d7 1080"]];
+    var w=document.getElementById("lnks"); if(!w)return;
+    w.innerHTML="";
+    rows.forEach(function(r){
+      var d=document.createElement("div");
+      d.style.cssText="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);flex-wrap:wrap";
+      var n=document.createElement("span");
+      n.style.cssText="font-size:12px;letter-spacing:.1em;color:var(--text);width:210px;flex:none";
+      n.textContent=r[0];
+      var i=document.createElement("input");
+      i.readOnly=true; i.value=base+r[1];
+      i.onclick=function(){ this.select(); };
+      i.style.cssText="flex:1;min-width:240px;background:#0A0A0A;border:1px solid var(--line2);color:var(--dim);font:inherit;font-size:11px;padding:8px 10px";
+      var s2=document.createElement("span");
+      s2.style.cssText="font-size:11px;color:var(--dimmer);width:86px;flex:none";
+      s2.textContent=r[2];
+      var cp=document.createElement("button");
+      cp.textContent="COPY";
+      cp.style.cssText="flex:none;background:transparent;border:1px solid var(--line2);color:var(--dim);"+
+        "font:inherit;font-size:10px;letter-spacing:.16em;padding:9px 15px;cursor:pointer";
+      cp.onmouseover=function(){ this.style.borderColor="var(--electric)"; this.style.color="var(--electric)"; };
+      cp.onmouseout=function(){ if(this.textContent==="COPY"){ this.style.borderColor="var(--line2)"; this.style.color="var(--dim)"; } };
+      cp.onclick=function(){
+        var btn=this, url=i.value;
+        function done(){
+          btn.textContent="COPIED";
+          btn.style.borderColor="var(--electric)"; btn.style.color="var(--electric)";
+          setTimeout(function(){ btn.textContent="COPY";
+            btn.style.borderColor="var(--line2)"; btn.style.color="var(--dim)"; },1600);
+        }
+        if(navigator.clipboard&&navigator.clipboard.writeText){
+          navigator.clipboard.writeText(url).then(done,function(){ i.select(); document.execCommand("copy"); done(); });
+        }else{ i.select(); try{ document.execCommand("copy"); }catch(e){} done(); }
+      };
+      d.appendChild(n); d.appendChild(i); d.appendChild(s2); d.appendChild(cp);
+      w.appendChild(d);
+    });
+  }
+
   function reveal(role){
+    buildLinks();
     var i, c=document.querySelectorAll(".crewonly");
     for(i=0;i<c.length;i++) c[i].style.display="";
     if(role==="owner"){
